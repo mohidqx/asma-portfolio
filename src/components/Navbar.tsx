@@ -8,7 +8,9 @@ const navItems = [
   { label: "About", path: "/about" },
   { label: "Services", path: "/services" },
   { label: "Projects", path: "/projects" },
+  { label: "Blog", path: "/blog" },
   { label: "Testimonials", path: "/testimonials" },
+  { label: "Feedback", path: "/feedback" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -24,8 +26,7 @@ const Navbar = () => {
           <span className="font-display text-xl font-bold text-gradient-gold">AM Marketing</span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -39,13 +40,11 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Mobile toggle */}
         <button onClick={() => setOpen(!open)} className="md:hidden text-foreground">
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
         <div className="md:hidden glass-strong border-t border-border/30 px-6 py-4 space-y-3">
           {navItems.map((item) => (

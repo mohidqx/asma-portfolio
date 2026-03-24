@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, Send, Instagram, Linkedin, Facebook } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const faqs = [
   { q: "Do you work with people from all countries?", a: "Yes, we work with people from all countries, according to their timezone." },
@@ -11,6 +13,31 @@ const faqs = [
 
 const Contact = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.from("contact_messages").insert({
+      name: name.trim(),
+      email: email.trim(),
+      message: message.trim(),
+    });
+    setLoading(false);
+    if (error) {
+      toast.error("Failed to send message");
+    } else {
+      toast.success("Message sent! We'll get back to you soon.");
+      setName(""); setEmail(""); setMessage("");
+    }
+  };
 
   return (
     <div className="min-h-screen pt-24">
@@ -24,44 +51,27 @@ const Contact = () => {
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
             <div className="glass-card rounded-3xl p-8 md:p-10 animate-fade-up opacity-0 delay-200">
               <h2 className="font-display text-2xl font-bold text-gradient-gold mb-6">Send a Message</h2>
-              <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-5" onSubmit={handleSubmit}>
                 <div>
                   <label className="text-sm text-muted-foreground font-body mb-1 block">Your Name</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm"
-                    placeholder="John Doe"
-                  />
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm" placeholder="John Doe" required />
                 </div>
                 <div>
                   <label className="text-sm text-muted-foreground font-body mb-1 block">Email Address</label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm"
-                    placeholder="john@example.com"
-                  />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm" placeholder="john@example.com" required />
                 </div>
                 <div>
                   <label className="text-sm text-muted-foreground font-body mb-1 block">Message</label>
-                  <textarea
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm resize-none"
-                    placeholder="Tell me about your project..."
-                  />
+                  <textarea rows={4} value={message} onChange={(e) => setMessage(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors font-body text-sm resize-none" placeholder="Tell me about your project..." required />
                 </div>
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-primary text-primary-foreground font-body font-semibold hover:scale-[1.02] transition-transform glow-gold"
-                >
-                  Send Message <Send size={18} />
+                <button type="submit" disabled={loading} className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-primary text-primary-foreground font-body font-semibold hover:scale-[1.02] transition-transform glow-gold disabled:opacity-50">
+                  {loading ? "Sending..." : "Send Message"} <Send size={18} />
                 </button>
               </form>
             </div>
 
-            {/* Contact Info & FAQ */}
             <div className="space-y-8">
               <div className="glass-card rounded-3xl p-8 animate-fade-up opacity-0 delay-300">
                 <h2 className="font-display text-2xl font-bold text-gradient-gold mb-6">Contact Information</h2>
@@ -86,22 +96,16 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* FAQ */}
               <div className="glass-card rounded-3xl p-8 animate-fade-up opacity-0 delay-400">
                 <h2 className="font-display text-2xl font-bold text-gradient-gold mb-6">FAQ</h2>
                 <div className="space-y-3">
                   {faqs.map((faq, i) => (
                     <div key={i} className="border-b border-border/20 pb-3 last:border-0">
-                      <button
-                        onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                        className="w-full text-left text-sm font-body font-medium text-foreground/80 hover:text-primary transition-colors flex justify-between items-center"
-                      >
+                      <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full text-left text-sm font-body font-medium text-foreground/80 hover:text-primary transition-colors flex justify-between items-center">
                         {faq.q}
                         <span className="text-primary ml-2">{openFaq === i ? "−" : "+"}</span>
                       </button>
-                      {openFaq === i && (
-                        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{faq.a}</p>
-                      )}
+                      {openFaq === i && <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{faq.a}</p>}
                     </div>
                   ))}
                 </div>
