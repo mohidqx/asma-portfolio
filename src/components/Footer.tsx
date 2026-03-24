@@ -5,7 +5,7 @@ import amLogo from "@/assets/am-logo.png";
 const Footer = () => (
   <footer className="glass-strong border-t border-border/20 mt-20">
     <div className="max-w-7xl mx-auto section-padding py-12">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
           <div className="flex items-center gap-3 mb-4">
             <img src={amLogo} alt="AM Marketing" className="h-10 w-10 object-contain" width={512} height={512} loading="lazy" />
@@ -19,13 +19,20 @@ const Footer = () => (
         <div>
           <h4 className="font-display text-lg text-primary mb-4">Quick Links</h4>
           <div className="space-y-2">
-            {["Home", "About", "Services", "Projects", "Contact"].map((item) => (
-              <Link
-                key={item}
-                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className="block text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
+            {["Home", "About", "Services", "Projects", "Blog", "Contact"].map((item) => (
+              <Link key={item} to={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                 {item}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-display text-lg text-primary mb-4">More</h4>
+          <div className="space-y-2">
+            {[{ label: "Testimonials", path: "/testimonials" }, { label: "Leave Feedback", path: "/feedback" }, { label: "Admin", path: "/admin/login" }].map((item) => (
+              <Link key={item.path} to={item.path} className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                {item.label}
               </Link>
             ))}
           </div>
