@@ -112,9 +112,9 @@ const AdminBookings = () => {
             </div>
             {b.message && <p className="text-sm text-muted-foreground mb-3">{b.message}</p>}
             <div className="flex flex-wrap gap-2">
-              <button onClick={() => updateStatus(b.id, "confirmed")} className="px-3 py-1 rounded-lg bg-green-500/10 text-green-500 text-xs font-body hover:bg-green-500/20">Confirm</button>
-              <button onClick={() => updateStatus(b.id, "completed")} className="px-3 py-1 rounded-lg bg-blue-500/10 text-blue-500 text-xs font-body hover:bg-blue-500/20">Complete</button>
-              <button onClick={() => updateStatus(b.id, "cancelled")} className="px-3 py-1 rounded-lg bg-red-500/10 text-red-500 text-xs font-body hover:bg-red-500/20">Cancel</button>
+              <button onClick={() => updateStatus(b.id, "confirmed")} className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-body hover:bg-primary/20">Confirm</button>
+              <button onClick={() => updateStatus(b.id, "completed")} className="px-3 py-1 rounded-lg bg-secondary text-secondary-foreground text-xs font-body hover:opacity-90">Complete</button>
+              <button onClick={() => updateStatus(b.id, "cancelled")} className="px-3 py-1 rounded-lg bg-destructive/10 text-destructive text-xs font-body hover:bg-destructive/20">Cancel</button>
               <button onClick={() => printBooking(b)} className="inline-flex items-center gap-2 px-3 py-1 rounded-lg border border-border/40 bg-card/60 text-xs font-body text-foreground hover:border-primary/40">
                 <Printer size={12} /> Print
               </button>
