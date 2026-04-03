@@ -28,6 +28,11 @@ const Contact = () => {
       toast.error(result.error.errors[0]?.message || "Invalid input");
       return;
     }
+    const d = result.data;
+    if (!d.name || !d.email || !d.message) {
+      toast.error("Please fill all fields");
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.from("contact_messages").insert(result.data);
     setLoading(false);
